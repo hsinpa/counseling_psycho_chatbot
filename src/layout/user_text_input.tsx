@@ -4,8 +4,8 @@ import { MessageInterface } from "../types/chatbot_type";
 import { v4 as uuidv4 } from 'uuid';
 import { wsContext } from "../App";
 import { KeyboardEventCode } from "../utility/static_text";
-import { Clamp } from "../utility/utility_func";
-import { GetWebOptions } from "../types/api_static";
+import { Clamp, FormatString } from "../utility/utility_func";
+import { API, CombineAPI, GetWebOptions } from "../types/api_static";
 
 type KeyValuePairType = {
     [key: string]: number;
@@ -41,15 +41,16 @@ export const User_Text_Input = function() {
         }
 
         if (websocket != null && web_option != null) {
-            console.log(websocket.id)
-            fetch('http://localhost:8842/chatbot/chat_stream', 
+            let url = CombineAPI(API.Post_Chat);
+
+            fetch(url, 
                 {method:'post', headers:{"Content-Type": "application/json"}, 
                 body: JSON.stringify({
-                text: message.content,
-                user_id: web_option.user_id,
-                session_id: web_option.session_id,
-                websocket_id: websocket.id,
-                token: message._id
+                    text: message.content,
+                    user_id: web_option.user_id,
+                    session_id: web_option.session_id,
+                    websocket_id: websocket.id,
+                    token: message._id
             })});
         }
 

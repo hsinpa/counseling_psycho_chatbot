@@ -13,7 +13,7 @@ export const ChatRoomView = function() {
         <MainSidebarView></MainSidebarView>
 
         <div className="h-full w-fit flex flex-col grow">
-          <Header_Comp chatbot_name='Hsinpa bot'></Header_Comp>
+          <Header_Comp chatbot_name='Chat bot'></Header_Comp>
           <MainMessageView></MainMessageView>    
           <div className="bg-gray-100 px-4 py-2">
             <User_Text_Input></User_Text_Input>

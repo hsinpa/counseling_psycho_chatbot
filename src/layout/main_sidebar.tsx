@@ -70,22 +70,21 @@ export const MainSidebarView = function() {
         )
     }
 
+    // useEffect(() => {
+    //     socket_manager?.ListenToEvent('websocket', 'sidebar_socket', on_socket_message);
 
-    useEffect(() => {
-        socket_manager?.ListenToEvent('websocket', 'sidebar_socket', on_socket_message);
+    //     return () => {
+    //         socket_manager?.Deregister('websocket', 'sidebar_socket');
+    //     }
 
-        return () => {
-            socket_manager?.Deregister('websocket', 'sidebar_socket');
-        }
-
-    }, [socket_manager]);
+    // }, [socket_manager]);
     
-    useEffect(() => {
-        let web_option = GetWebOptions();
-        if (web_option != null)
-            fetch_memory(web_option.user_id, web_option.session_id);
+    // useEffect(() => {
+    //     let web_option = GetWebOptions();
+    //     if (web_option != null)
+    //         fetch_memory(web_option.user_id, web_option.session_id);
 
-    }, []);
+    // }, []);
 
     return (
         <div className={`side-panel bg-gray-100 h-full flex flex-col w-0 transition-all ${ui_panel_flag ? "p-1 w-72": ""}`}>

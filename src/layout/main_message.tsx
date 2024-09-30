@@ -33,10 +33,6 @@ const RenderBubbleComp = memo(function({comp}: {comp : MessageInterface | undefi
         return <BotInputBubbleComp content={comp.content}></BotInputBubbleComp>
     }
 
-    if (comp.type == 'narrator')   {
-        return <NarratorBubbleComp content={comp.content}></NarratorBubbleComp>
-    }
-
     if (comp.type == 'human') {
         return <UserInputBubbleComp content={comp.content}></UserInputBubbleComp>
     }
@@ -63,7 +59,8 @@ export const MainMessageView = function() {
 
         let messages: any[] = await (await fetch(url)).json();
 
-        console.log(messages);
+        console.log('fetch_sync_message', messages);
+        
         for (let i = 0; i < messages.length; i++) {        
             let message_type = {
                 _id: messages[i].bubble_id,
@@ -78,18 +75,22 @@ export const MainMessageView = function() {
 
     const on_socket_message = function(event_id: string, json_data: any) {
         // try {
+
+
             if (json_data['event'] == 'bot') {
                 let bubble_id = json_data['bubble_id'];
                 let index = json_data['index'];
                 let data_chunk = json_data['data'];
                 let current_message_struct = get_message_func(bubble_id);
-                
+
+                console.log('on_socket_message', current_message_struct);
+
                 // Push
                 if (current_message_struct == null) {
                     push_message_func({
                         _id: bubble_id, 
                         content: data_chunk,
-                        type: json_data['identity'],
+                        type: 'bot',
                         version: index
                     })
                 } else {
