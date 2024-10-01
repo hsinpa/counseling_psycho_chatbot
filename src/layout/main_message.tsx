@@ -7,6 +7,7 @@ import { wsContext } from "../App";
 import { Clamp, FormatString } from "../utility/utility_func";
 import { NarratorBubbleComp } from "../components/NarratorBubble";
 import { API, CombineAPI, GetWebOptions } from "../types/api_static";
+import { useUIStore } from "../zusland/UIStore";
 
 
 export const cal_container_height = function(force: boolean = false) {
@@ -51,6 +52,7 @@ export const MainMessageView = function() {
     let update_message_func = useMessageStore(state => state.update_message)
     let push_message_func = useMessageStore(state => state.push_message)
     let clear_message_func = useMessageStore(state => state.clear)
+    let set_input_block = useUIStore(state => state.set_input_block)
 
     let socket_manager = useContext(wsContext);
 
@@ -81,9 +83,16 @@ export const MainMessageView = function() {
                 let bubble_id = json_data['bubble_id'];
                 let index = json_data['index'];
                 let data_chunk = json_data['data'];
+                let stream_type = json_data['type'];
                 let current_message_struct = get_message_func(bubble_id);
 
                 console.log('on_socket_message', current_message_struct);
+                
+                // The end token has reach, release user inputbox
+                if (stream_type == 'complete') {
+                    set_input_block(false);
+                }
+
 
                 // Push
                 if (current_message_struct == null) {

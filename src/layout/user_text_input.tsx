@@ -6,6 +6,7 @@ import { wsContext } from "../App";
 import { KeyboardEventCode } from "../utility/static_text";
 import { Clamp, FormatString } from "../utility/utility_func";
 import { API, CombineAPI, GetWebOptions } from "../types/api_static";
+import { useUIStore } from "../zusland/UIStore";
 
 type KeyValuePairType = {
     [key: string]: number;
@@ -17,6 +18,8 @@ export const User_Text_Input = function() {
     const push_message_callback = useMessageStore(s=>s.push_message);
     const [is_focus, set_focus] = useState(false);
     const [textarea_value, set_textarea] = useState('');
+    let set_input_block = useUIStore(state => state.set_input_block)
+    let input_block_flag = useUIStore(state => state.input_block_flag)
 
     let websocket = useContext(wsContext);
 
@@ -52,6 +55,8 @@ export const User_Text_Input = function() {
                     websocket_id: websocket.id,
                     token: message._id
             })});
+
+            set_input_block(true);
         }
 
         push_message_callback(message);
@@ -66,7 +71,7 @@ export const User_Text_Input = function() {
         keyboad_pair_tables[event.key] = 1
 
         if (event.key == KeyboardEventCode.Enter && !(KeyboardEventCode.Shift in keyboad_pair_tables)
-        && !event.isComposing) {
+        && !event.isComposing && !input_block_flag) {
             event.preventDefault();
             fire_submit_event();
         }
@@ -105,7 +110,7 @@ export const User_Text_Input = function() {
                 value={textarea_value}
                 className="bg-slate-50 w-full resize-none rounded p-4 max-h-40 focus:outline-none">
             </textarea>
-            <button className="bg-slate-300 px-2" onClick={fire_submit_event}>Send</button>
+            <button className="bg-slate-300 px-2" disabled={input_block_flag} onClick={fire_submit_event}>Send</button>
         </div>
     )
 }
