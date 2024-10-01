@@ -65,7 +65,8 @@ export const User_Text_Input = function() {
     const on_keyboard_down = function (event: KeyboardEvent) {
         keyboad_pair_tables[event.key] = 1
 
-        if (event.key == KeyboardEventCode.Enter && !(KeyboardEventCode.Shift in keyboad_pair_tables)) {
+        if (event.key == KeyboardEventCode.Enter && !(KeyboardEventCode.Shift in keyboad_pair_tables)
+        && !event.isComposing) {
             event.preventDefault();
             fire_submit_event();
         }
